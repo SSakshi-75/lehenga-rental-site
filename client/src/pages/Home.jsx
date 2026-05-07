@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, ChevronRight } from 'lucide-react';
-import axios from 'axios';
+import { getContent } from '../utils/apifetch';
 import lehengaHero from '../assets/lehenga-hero.png';
 
 
@@ -12,7 +12,7 @@ const Home = () => {
   React.useEffect(() => {
     const fetchContent = async () => {
       try {
-        const { data } = await axios.get('/api/content');
+        const { data } = await getContent();
         const contentMap = {};
         data.forEach(item => contentMap[item.key] = item.value);
         setContent(contentMap);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import { createOrder } from '../utils/apifetch';
 import { toast } from 'react-hot-toast';
 import { MapPin, Phone, CreditCard, ArrowRight, Loader2, ChevronRight } from 'lucide-react';
 
@@ -52,7 +52,7 @@ const Checkout = () => {
         totalPrice: cartTotal,
       };
 
-      await axios.post('/api/orders', orderData, config);
+      await createOrder(orderData, config);
       clearCart();
       setLoading(false);
       toast.success('Booking successful! Elegant choice.');

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { getMyOrders } from '../utils/apifetch';
 import { ShoppingBag, Calendar, MapPin, Tag } from 'lucide-react';
 
 const Orders = () => {
@@ -9,7 +9,7 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const { data } = await axios.get('/api/orders/myorders');
+        const { data } = await getMyOrders();
         setOrders(data);
         setLoading(false);
       } catch (error) {

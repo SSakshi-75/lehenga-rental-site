@@ -1,5 +1,4 @@
-
-    import express from "express";
+import express from "express";
     import { config } from "dotenv";
     import compression from "compression";
     import cookieParser from "cookie-parser";
@@ -13,29 +12,11 @@
     import userRoutes from "./src/routes/user.routes.js";
     import uploadRoutes from "./src/routes/upload.routes.js";
     import contentRoutes from "./src/routes/content.routes.js";
-    import cluster from "cluster";
     import path from "path";
-    import os from "os";
 
     config();
 
     const PORT = process.env.PORT || 5000;
-    const numCPUs = os.cpus().length;
-
-    if (cluster.isPrimary) {
-      console.log("Master process running:", process.pid);
-
-      for (let i = 0; i < numCPUs; i++) {
-        cluster.fork();
-      }
-
-      cluster.on("exit", (worker) => {
-        console.log("Worker died:", worker.process.pid);
-        cluster.fork();
-      });
-
-    } else {
-
     const app = express();
 
     app.use(cors({ origin: "*", credentials: true }));
@@ -47,7 +28,7 @@
     app.use(morgan("dev"));
 
     app.get("/", (req, res) => {
-      res.send("Welcome to Auto Generated Backend!");
+      res.send("Welcome to RANI Luxury Rental API!");
     });
 
     app.use("/api/auth", authRoutes);
@@ -65,7 +46,7 @@
       app.listen(PORT, () =>
         console.log("🚀 Server running at http://localhost:" + PORT)
       );
+    }).catch(err => {
+      console.error("Failed to connect to database", err);
+      process.exit(1);
     });
-
-    }
-    

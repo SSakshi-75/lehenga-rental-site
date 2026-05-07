@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import axios from 'axios';
+import { getContent } from '../utils/apifetch';
 
 const CartContext = createContext();
 
@@ -13,7 +13,7 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     const fetchGlobalSettings = async () => {
       try {
-        const { data } = await axios.get('/api/content');
+        const { data } = await getContent();
         const gstSetting = data.find(item => item.key === 'global-gst-rate');
         if (gstSetting) setGlobalGst(Number(gstSetting.value));
       } catch (err) {

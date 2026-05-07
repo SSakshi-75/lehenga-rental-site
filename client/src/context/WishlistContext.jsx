@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import { getWishlist, addToWishlist } from '../utils/apifetch';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-hot-toast';
 
@@ -17,7 +17,7 @@ export const WishlistProvider = ({ children }) => {
     }
     try {
       setLoading(true);
-      const { data } = await axios.get('/api/users/wishlist', {
+      const { data } = await getWishlist({
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setWishlist(Array.isArray(data) ? data : []);
@@ -40,7 +40,7 @@ export const WishlistProvider = ({ children }) => {
     }
 
     try {
-      const { data } = await axios.post(`/api/users/wishlist/${productId}`, {}, {
+      const { data } = await addToWishlist(productId, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { getProducts } from '../utils/apifetch';
 import { useLocation } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { Filter, X, ChevronDown } from 'lucide-react';
@@ -44,16 +44,14 @@ const Collection = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const { data } = await axios.get(`/api/products`, {
-          params: {
-            category,
-            minPrice: priceRange[0],
-            maxPrice: priceRange[1],
-            size,
-            color,
-            availableDate,
-            search: querySearch
-          }
+        const { data } = await getProducts({
+          category,
+          minPrice: priceRange[0],
+          maxPrice: priceRange[1],
+          size,
+          color,
+          availableDate,
+          search: querySearch
         });
         setProducts(data);
         setLoading(false);

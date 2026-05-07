@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import { login as apiLogin, register as apiRegister, logout as apiLogout } from '../utils/apifetch';
 import { toast } from 'react-hot-toast';
 
 const AuthContext = createContext();
@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setLoading(true);
     try {
-      const { data } = await axios.post('/api/auth/login', { email, password });
+      const { data } = await apiLogin({ email, password });
       setUser(data);
       localStorage.setItem('userInfo', JSON.stringify(data));
       setLoading(false);
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (name, email, password) => {
     setLoading(true);
     try {
-      const { data } = await axios.post('/api/auth/register', { name, email, password });
+      const { data } = await apiRegister({ name, email, password });
       setUser(data);
       localStorage.setItem('userInfo', JSON.stringify(data));
       setLoading(false);
@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post('/api/auth/logout');
+      await apiLogout();
       setUser(null);
       localStorage.removeItem('userInfo');
       toast.success('Logged out successfully');

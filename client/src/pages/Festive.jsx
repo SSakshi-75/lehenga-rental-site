@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import { Filter, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getProducts, getContent as apiGetContent } from '../utils/apifetch';
 
 const Festive = () => {
   const [products, setProducts] = useState([]);
@@ -20,7 +20,7 @@ const Festive = () => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const { data } = await axios.get('/api/content');
+        const { data } = await apiGetContent();
         const contentMap = {};
         data.forEach(item => contentMap[item.key] = item.value);
         setContent(contentMap);
@@ -35,13 +35,11 @@ const Festive = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const { data } = await axios.get(`/api/products`, {
-          params: {
-            category: 'Festive Lehenga',
-            minPrice: priceRange[0],
-            maxPrice: priceRange[1],
-            size
-          }
+        const { data } = await getProducts({
+          category: 'Festive Lehenga',
+          minPrice: priceRange[0],
+          maxPrice: priceRange[1],
+          size
         });
         setProducts(data);
         setLoading(false);
