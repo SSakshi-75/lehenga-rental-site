@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Edit2, Trash2, Plus, Search, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/apifetch';
 
 const Inventory = () => {
   const { user } = useAuth();
@@ -16,8 +16,12 @@ const Inventory = () => {
 
   const fetchProducts = async () => {
     try {
-      const { data } = await axios.get('/api/products');
-      setProducts(data);
+      const { data } = await api.get('/products');
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        setProducts([]);
+      }
       setLoading(false);
     } catch (error) {
       console.error('Error fetching products', error);
@@ -28,12 +32,7 @@ const Inventory = () => {
   const deleteHandler = async (id) => {
     if (window.confirm('Are you sure you want to delete this designer piece?')) {
       try {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        };
-        await axios.delete(`/api/products/${id}`, config);
+        await api.delete(`/products/${id}`);
         fetchProducts();
       } catch (error) {
         alert(error.response?.data?.message || 'Delete failed');

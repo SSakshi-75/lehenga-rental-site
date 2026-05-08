@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Users, Trash2, Mail, Shield, Search, MoreVertical } from 'lucide-react';
+import api from '../../utils/apifetch';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -13,10 +12,12 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      // In a real app, this would be an admin-only endpoint
-      // For now we use the users in the DB
-      const { data } = await axios.get('/api/users'); // Assuming this exists or I'll create it
-      setUsers(data);
+      const { data } = await api.get('/users');
+      if (Array.isArray(data)) {
+        setUsers(data);
+      } else {
+        setUsers([]);
+      }
       setLoading(false);
     } catch (error) {
       console.error('Error fetching users', error);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Package, Check, X, Eye, Phone } from 'lucide-react';
+import api from '../../utils/apifetch';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -13,8 +13,12 @@ const AdminOrders = () => {
 
   const fetchOrders = async () => {
     try {
-      const { data } = await axios.get('/api/orders');
-      setOrders(data);
+      const { data } = await api.get('/orders');
+      if (Array.isArray(data)) {
+        setOrders(data);
+      } else {
+        setOrders([]);
+      }
       setLoading(false);
     } catch (error) {
       console.error('Error fetching admin orders', error);
@@ -24,13 +28,13 @@ const AdminOrders = () => {
 
   const updateStatus = async (id, status) => {
     try {
-      await axios.put(`/api/orders/${id}/status`, { status });
+      await api.put(`/orders/${id}/status`, { status });
       fetchOrders();
       if (selectedOrder?._id === id) {
         setSelectedOrder(prev => ({ ...prev, status }));
       }
     } catch (error) {
-      alert('Status update failed');
+      console.error('Status update failed', error);
     }
   };
 

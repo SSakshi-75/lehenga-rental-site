@@ -12,6 +12,8 @@ import {
   ShieldCheck
 } from 'lucide-react';
 
+import api from '../../utils/apifetch';
+
 const AdminPortal = () => {
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -24,11 +26,15 @@ const AdminPortal = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const { data: statsData } = await axios.get('/api/admin/stats');
+        const { data: statsData } = await api.get('/admin/stats');
         setStats(statsData);
         
-        const { data: ordersData } = await axios.get('/api/orders');
-        setRecentOrders(ordersData.slice(0, 4));
+        const { data: ordersData } = await api.get('/orders');
+        if (Array.isArray(ordersData)) {
+          setRecentOrders(ordersData.slice(0, 4));
+        } else {
+          setRecentOrders([]);
+        }
       } catch (error) {
         console.error('Error fetching dashboard data', error);
       }
