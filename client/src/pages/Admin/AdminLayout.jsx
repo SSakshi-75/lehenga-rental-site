@@ -174,10 +174,10 @@ const AdminLayout = () => {
                     <span className="bg-maroon text-white text-[8px] px-2 py-0.5 rounded-full font-bold">{pendingCount} NEW</span>
                   </div>
                   <div className="max-h-80 md:max-h-96 overflow-y-auto">
-                    {pendingOrders.length > 0 || pendingInquiries.length > 0 ? (
+                    {(pendingOrders?.length > 0 || pendingInquiries?.length > 0) ? (
                       <>
                         {/* Orders */}
-                        {pendingOrders.map((order) => (
+                        {Array.isArray(pendingOrders) && pendingOrders.map((order) => (
                           <Link
                             key={order._id}
                             to="/rani-manager/orders"
@@ -189,12 +189,12 @@ const AdminLayout = () => {
                             </div>
                             <div className="min-w-0">
                               <p className="text-sm font-bold text-gray-800 truncate">New Booking: {order.user?.name || 'Customer'}</p>
-                              <p className="text-[10px] text-gray-400 font-mono italic">#{order._id.slice(-6).toUpperCase()}</p>
+                              <p className="text-[10px] text-gray-400 font-mono italic">#{order._id?.slice(-6).toUpperCase()}</p>
                             </div>
                           </Link>
                         ))}
                         {/* Inquiries */}
-                        {pendingInquiries.map((inquiry) => (
+                        {Array.isArray(pendingInquiries) && pendingInquiries.map((inquiry) => (
                           <Link
                             key={inquiry._id}
                             to="/rani-manager/inquiries"

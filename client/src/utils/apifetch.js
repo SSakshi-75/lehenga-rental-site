@@ -8,7 +8,20 @@ const api = axios.create({
 // Request interceptor for token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const adminInfo = localStorage.getItem('adminInfo');
+    const userInfo = localStorage.getItem('userInfo');
+    
+    let token = null;
+    try {
+      if (adminInfo) {
+        token = JSON.parse(adminInfo).token;
+      } else if (userInfo) {
+        token = JSON.parse(userInfo).token;
+      }
+    } catch (e) {
+      console.error('Error parsing auth info', e);
+    }
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
