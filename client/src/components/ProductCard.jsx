@@ -86,7 +86,7 @@ const ProductCard = ({ product }) => {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <p className="text-[14px] font-semibold text-luxury-text">₹{product.price.toLocaleString()}</p>
+          <p className="text-[14px] font-semibold text-luxury-text">₹{(product.price || 0).toLocaleString()}</p>
           <span className="text-[9px] text-luxury-muted font-bold uppercase tracking-widest">PER DAY</span>
         </div>
 

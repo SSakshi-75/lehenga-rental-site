@@ -171,9 +171,9 @@ const ProductDetail = () => {
               </button>
             </div>
             <div className="flex items-baseline gap-4 mt-2">
-              <span className="text-2xl font-medium text-black">Rs. {product.price.toLocaleString()}</span>
+              <span className="text-2xl font-medium text-black">Rs. {(product.price || 0).toLocaleString()}</span>
               <span className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">(Excl. {product.gst || 12}% GST)</span>
-              <span className="text-gray-400 line-through text-sm italic opacity-50">Rs. {(product.price * 1.5).toLocaleString()}</span>
+              <span className="text-gray-400 line-through text-sm italic opacity-50">Rs. {(product.price ? product.price * 1.5 : 0).toLocaleString()}</span>
             </div>
           </div>
 
@@ -251,7 +251,7 @@ const ProductDetail = () => {
           {/* Total Price Display */}
           <div className="flex justify-between items-center py-2">
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Total (Incl. Rs. {(product.securityDeposit || 2000).toLocaleString()} Refundable Deposit)</span>
-            <span className="text-xl font-bold text-black">Rs. {totalPrice.toLocaleString()}</span>
+            <span className="text-xl font-bold text-black">Rs. {(totalPrice || 0).toLocaleString()}</span>
           </div>
 
           <button 
