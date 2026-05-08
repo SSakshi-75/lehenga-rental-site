@@ -68,7 +68,7 @@ const AdminPortal = () => {
         />
         <StatCard 
           title="Total Revenue" 
-          value={`₹${stats.totalRevenue.toLocaleString()}`} 
+          value={`₹${(stats.totalRevenue || 0).toLocaleString()}`} 
           icon={IndianRupee} 
           color="gold" 
           trend="Received"
@@ -103,7 +103,7 @@ const AdminPortal = () => {
                     </div>
                     <div>
                       <p className="font-bold text-gray-800 text-sm">Booking Request from {order.user?.name || 'Customer'}</p>
-                      <p className="text-xs text-gray-500">Order ID: #{order._id.slice(-6)} • Total: ₹{order.totalPrice.toLocaleString()}</p>
+                      <p className="text-xs text-gray-500">Order ID: #{order._id.slice(-6)} • Total: ₹{(order.totalPrice || 0).toLocaleString()}</p>
                     </div>
                   </div>
                   <ChevronRight className="w-4 h-4 text-gray-400" />

@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { LayoutDashboard, ShoppingBag, PlusCircle, Users, Settings, Package, Bell, Search, LogOut, ArrowLeft, MessageCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/apifetch';
 
 const AdminLayout = () => {
   const { adminLogout } = useAuth();
@@ -11,13 +12,16 @@ const AdminLayout = () => {
   const [pendingOrders, setPendingOrders] = useState([]);
   const [pendingInquiries, setPendingInquiries] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [lastSeenTimestamp, setLastSeenTimestamp] = useState(
+    parseInt(localStorage.getItem('admin_last_seen_notification') || '0')
+  );
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const [{ data: orders }, { data: inquiries }] = await Promise.all([
-          axios.get('/api/orders'),
-          axios.get('/api/inquiries')
+          api.get('/orders'),
+          api.get('/inquiries')
         ]);
         
         const pendingO = Array.isArray(orders) ? orders.filter(o => o.status === 'Pending') : [];
@@ -25,7 +29,13 @@ const AdminLayout = () => {
         
         setPendingOrders(pendingO);
         setPendingInquiries(pendingI);
-        setPendingCount(pendingO.length + pendingI.length);
+        
+        // Only count items newer than the last seen timestamp
+        const newItemsCount = [...pendingO, ...pendingI].filter(
+          item => new Date(item.createdAt).getTime() > lastSeenTimestamp
+        ).length;
+        
+        setPendingCount(newItemsCount);
       } catch (error) {
         console.error('Error fetching notifications', error);
       }
@@ -34,7 +44,18 @@ const AdminLayout = () => {
     fetchNotifications();
     const interval = setInterval(fetchNotifications, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [lastSeenTimestamp]);
+
+  const toggleNotifications = () => {
+    const nextState = !showNotifications;
+    setShowNotifications(nextState);
+    if (nextState) {
+      const now = Date.now();
+      setLastSeenTimestamp(now);
+      localStorage.setItem('admin_last_seen_notification', now.toString());
+      setPendingCount(0);
+    }
+  };
 
   const menuItems = [
     { name: 'Dashboard', path: '/rani-manager', icon: LayoutDashboard },
@@ -108,7 +129,7 @@ const AdminLayout = () => {
           <div className="flex items-center gap-6">
             <div className="relative">
               <button 
-                onClick={() => setShowNotifications(!showNotifications)}
+                onClick={toggleNotifications}
                 className="relative text-gray-400 hover:text-maroon transition-colors group p-2 rounded-full hover:bg-gray-100"
               >
                 <Bell className="w-5 h-5 group-hover:scale-110 transition-transform" />

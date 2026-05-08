@@ -74,7 +74,7 @@ const AdminOrders = () => {
                       ))}
                     </div>
                   </td>
-                  <td className="px-6 py-4 font-bold text-maroon">₹{order.totalPrice}</td>
+                  <td className="px-6 py-4 font-bold text-maroon">₹{(order.totalPrice || 0).toLocaleString()}</td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${
                       order.status === 'Approved' ? 'bg-green-100 text-green-700' : 
@@ -186,7 +186,7 @@ const AdminOrders = () => {
                 </div>
                 <div>
                   <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Total Amount</p>
-                  <p className="text-2xl font-bold text-maroon font-playfair">₹{selectedOrder.totalPrice.toLocaleString()}</p>
+                  <p className="text-2xl font-bold text-maroon font-playfair">₹{(selectedOrder.totalPrice || 0).toLocaleString()}</p>
                   <p className="text-[10px] text-green-600 font-bold uppercase mt-1">Payment Successful</p>
                 </div>
               </div>

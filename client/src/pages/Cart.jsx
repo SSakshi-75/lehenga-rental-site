@@ -77,7 +77,7 @@ const Cart = () => {
                     </p>
                   </div>
 
-                  <p className="text-[15px] font-bold text-black pt-4">₹{item.totalPrice}</p>
+                  <p className="text-[15px] font-bold text-black pt-4">₹{(item.totalPrice || 0).toLocaleString()}</p>
                 </div>
               </motion.div>
             ))}
@@ -91,11 +91,11 @@ const Cart = () => {
               <div className="space-y-6 mb-10 text-[11px] font-bold uppercase tracking-widest">
                 <div className="flex justify-between text-gray-500">
                   <span>Subtotal</span>
-                  <span className="text-black">₹{cartSubtotal}</span>
+                  <span className="text-black">₹{(cartSubtotal || 0).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-gray-500">
                   <span>GST (Tax)</span>
-                  <span className="text-black">₹{Math.round(cartTax)}</span>
+                  <span className="text-black">₹{(Math.round(cartTax) || 0).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-gray-500">
                   <span>Shipping</span>
@@ -105,7 +105,7 @@ const Cart = () => {
 
               <div className="flex justify-between items-end mb-12">
                 <span className="text-[13px] font-bold uppercase tracking-[0.2em]">Total</span>
-                <span className="text-3xl font-bold text-black">₹{cartTotal}</span>
+                <span className="text-3xl font-bold text-black">₹{(cartTotal || 0).toLocaleString()}</span>
               </div>
 
               <button 

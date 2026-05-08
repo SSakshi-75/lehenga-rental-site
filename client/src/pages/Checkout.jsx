@@ -165,7 +165,7 @@ const Checkout = () => {
                   <div className="flex-1 space-y-1">
                     <p className="text-[11px] font-bold uppercase tracking-widest text-black">{item.name}</p>
                     <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">{item.size} • {item.days} Days</p>
-                    <p className="text-[13px] font-bold text-black mt-2">₹{item.totalPrice}</p>
+                    <p className="text-[13px] font-bold text-black mt-2">₹{(item.totalPrice || 0).toLocaleString()}</p>
                   </div>
                 </div>
               ))}
@@ -173,15 +173,15 @@ const Checkout = () => {
             <div className="mt-10 pt-10 border-t border-black/5 space-y-4">
               <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-gray-500">
                 <span>Subtotal</span>
-                <span>₹{cartSubtotal}</span>
+                <span>₹{(cartSubtotal || 0).toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-gray-500">
                 <span>GST (Tax)</span>
-                <span>₹{Math.round(cartTax)}</span>
+                <span>₹{(Math.round(cartTax) || 0).toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-end pt-4 border-t border-black/5">
                 <span className="text-[11px] font-bold uppercase tracking-[0.2em]">Total</span>
-                <span className="text-3xl font-bold text-black">₹{cartTotal}</span>
+                <span className="text-3xl font-bold text-black">₹{(cartTotal || 0).toLocaleString()}</span>
               </div>
             </div>
           </div>

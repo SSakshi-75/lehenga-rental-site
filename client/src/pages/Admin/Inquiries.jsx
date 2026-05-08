@@ -84,11 +84,11 @@ const Inquiries = () => {
                       </div>
                       <div className="flex items-center gap-3 text-gray-500">
                         <MapPin className="w-4 h-4 text-luxury-gold" />
-                        <span className="text-xs font-medium">{inquiry.city}, {inquiry.address}</span>
+                        <span className="text-xs font-medium">{inquiry.city || 'N/A'}, {inquiry.address || 'N/A'}</span>
                       </div>
                       <div className="flex items-center gap-3 text-gray-500">
                         <Calendar className="w-4 h-4 text-luxury-gold" />
-                        <span className="text-xs font-medium">{new Date(inquiry.createdAt).toLocaleDateString()}</span>
+                        <span className="text-xs font-medium">{inquiry.createdAt ? new Date(inquiry.createdAt).toLocaleDateString() : 'N/A'}</span>
                       </div>
                     </div>
 

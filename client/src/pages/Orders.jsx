@@ -59,7 +59,7 @@ const Orders = () => {
                   }`}>
                     {order.status}
                   </span>
-                  <p className="text-xl font-bold text-maroon">₹{order.totalPrice}</p>
+                  <p className="text-xl font-bold text-maroon">₹{(order.totalPrice || 0).toLocaleString()}</p>
                 </div>
               </div>
 
