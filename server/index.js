@@ -12,6 +12,7 @@ import adminRoutes from "./src/routes/admin.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
 import uploadRoutes from "./src/routes/upload.routes.js";
 import contentRoutes from "./src/routes/content.routes.js";
+import inquiryRoutes from "./src/routes/inquiry.routes.js";
 import path from "path";
 
 config();
@@ -20,7 +21,10 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 
 app.use(cors({
-  origin: "https://lehenga-rental-site.vercel.app", credentials: true, methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], allowedHeaders: ["Content - Type", "Authorization"]
+  origin: ["https://lehenga-rental-site.vercel.app", "http://localhost:5173"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(compression());
@@ -40,6 +44,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/content", contentRoutes);
+app.use("/api/inquiries", inquiryRoutes);
 
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));

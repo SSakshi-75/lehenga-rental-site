@@ -17,6 +17,13 @@ const Checkout = () => {
   
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    if (!user) {
+      toast.error('Please login to continue checkout');
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 

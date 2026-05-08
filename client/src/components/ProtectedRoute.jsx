@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const ProtectedRoute = ({ adminOnly = false }) => {
-  const { user, loading } = useAuth();
+  const { user, adminUser, loading } = useAuth();
 
   if (loading) {
     return (
@@ -13,12 +13,17 @@ const ProtectedRoute = ({ adminOnly = false }) => {
     );
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  // Admin Route Logic
+  if (adminOnly) {
+    if (!adminUser) {
+      return <Navigate to="/rani-auth" replace />;
+    }
+    return <Outlet />;
   }
 
-  if (adminOnly && user.role !== 'admin') {
-    return <Navigate to="/" replace />;
+  // User Route Logic
+  if (!user) {
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getMyOrders } from '../utils/apifetch';
 import { ShoppingBag, Calendar, MapPin, Tag } from 'lucide-react';
 
@@ -65,10 +66,14 @@ const Orders = () => {
               {/* Order Items */}
               <div className="p-6 md:p-8 space-y-6">
                 {order.orderItems.map((item, idx) => (
-                  <div key={idx} className="flex flex-col md:flex-row gap-8 items-center md:items-start">
-                    <img src={item.image} alt="" className="w-24 h-32 rounded-xl object-cover shadow-md" />
+                  <Link 
+                    key={idx} 
+                    to={`/product/${item.product}`}
+                    className="flex flex-col md:flex-row gap-8 items-center md:items-start group cursor-pointer"
+                  >
+                    <img src={item.image} alt="" className="w-24 h-32 rounded-xl object-cover shadow-md group-hover:scale-[1.02] transition-transform duration-500" />
                     <div className="flex-1 space-y-3">
-                      <h3 className="text-2xl font-playfair font-bold text-gray-800">{item.name}</h3>
+                      <h3 className="text-2xl font-playfair font-bold text-gray-800 group-hover:text-maroon transition-colors">{item.name}</h3>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="flex items-center gap-2 text-sm text-gray-500 font-poppins">
                           <Tag className="w-4 h-4 text-gold" /> Size: <span className="font-bold text-maroon">{item.size}</span>
@@ -81,7 +86,7 @@ const Orders = () => {
                         <Calendar className="w-4 h-4" /> Rental: <span className="text-gray-800">{item.startDate} — {item.endDate}</span>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
 

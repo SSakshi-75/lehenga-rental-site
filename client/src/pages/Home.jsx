@@ -8,7 +8,7 @@ import lehengaHero from '../assets/lehenga-hero.png';
 
 const Home = () => {
   const [content, setContent] = React.useState({});
-  
+
   React.useEffect(() => {
     const fetchContent = async () => {
       try {
@@ -24,20 +24,20 @@ const Home = () => {
   }, []);
 
   const categories = [
-    { 
-      name: 'Bridal Lehenga', 
-      img: (content['home-cat-bridal-img'] && content['home-cat-bridal-img'].trim()) || 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop', 
-      desc: content['home-cat-bridal-desc'] || 'The Eternal Bride' 
+    {
+      name: 'Bridal Lehenga',
+      img: (content['home-cat-bridal-img'] && content['home-cat-bridal-img'].trim()) || 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
+      desc: content['home-cat-bridal-desc'] || 'The Eternal Bride'
     },
-    { 
-      name: 'Party Wear Lehenga', 
-      img: (content['home-cat-party-img'] && content['home-cat-party-img'].trim()) || 'https://images.unsplash.com/photo-1605332766099-224449887010?q=80&w=800&auto=format&fit=crop', 
-      desc: content['home-cat-party-desc'] || 'Evening Grandeur' 
+    {
+      name: 'Party Wear Lehenga',
+      img: (content['home-cat-party-img'] && content['home-cat-party-img'].trim()) || 'https://images.unsplash.com/photo-1605332766099-224449887010?q=80&w=800&auto=format&fit=crop',
+      desc: content['home-cat-party-desc'] || 'Evening Grandeur'
     },
-    { 
-      name: 'Festive Lehenga', 
-      img: (content['home-cat-festive-img'] && content['home-cat-festive-img'].trim()) || 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=800&auto=format&fit=crop', 
-      desc: content['home-cat-festive-desc'] || 'Vibrant Traditions' 
+    {
+      name: 'Festive Lehenga',
+      img: (content['home-cat-festive-img'] && content['home-cat-festive-img'].trim()) || 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=800&auto=format&fit=crop',
+      desc: content['home-cat-festive-desc'] || 'Vibrant Traditions'
     },
   ];
 
@@ -47,9 +47,9 @@ const Home = () => {
       {/* Hero Section */}
       <section className="relative h-[95vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <img 
-            src={content['home-hero-bg'] || lehengaHero} 
-            alt="Rani Luxury Hero" 
+          <img
+            src={content['home-hero-bg'] || lehengaHero}
+            alt="Rani Luxury Hero"
             className="w-full h-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-black/20"></div>
@@ -161,7 +161,8 @@ const Home = () => {
             </div>
             <div>
               <h4 className="text-[11px] font-bold uppercase tracking-widest mb-2">Phone</h4>
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">+91 88876 54321</p>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">+91 88876 54321
+              </p>
             </div>
           </div>
         </div>

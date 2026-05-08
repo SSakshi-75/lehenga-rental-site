@@ -1,111 +1,191 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { toast } from 'react-hot-toast';
 import { ShieldAlert, Lock, Mail, Loader2, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 const AdminAuth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isForgotMode, setIsForgotMode] = useState(false);
   const [error, setError] = useState('');
-  const { login, logout, loading } = useAuth();
+  const [success, setSuccess] = useState('');
+  const { adminLogin, forgotPassword, loading } = useAuth();
   const navigate = useNavigate();
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    const result = await forgotPassword(email);
+    if (result.success) {
+      setSuccess(result.message);
+    } else {
+      setError(result.message);
+    }
+  };
 
   const handleAdminLogin = async (e) => {
     e.preventDefault();
     setError('');
-    const result = await login(email, password);
+    const result = await adminLogin(email, password);
     if (result.success) {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      if (userInfo && userInfo.role === 'admin') {
-        navigate('/rani-manager');
-      } else {
-        logout(); // Not an admin, kick them out
-        setError('AUTHORITY DENIED: Customer accounts are not permitted here.');
-      }
+      navigate('/rani-manager');
     } else {
-      setError('AUTHORITY DENIED: Invalid credentials or insufficient permissions.');
+      setError(result.message || 'AUTHORITY DENIED: Invalid credentials or insufficient permissions.');
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 font-poppins">
+    <div className="min-h-screen bg-luxury-bg flex items-center justify-center p-4 sm:p-6 font-sans">
       <div className="max-w-md w-full">
-        {/* Logo/Icon */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-maroon rounded-3xl shadow-2xl shadow-maroon/50 mb-6 rotate-3">
-            <ShieldAlert className="w-10 h-10 text-white" />
-          </div>
-          <h1 className="text-4xl font-black text-white tracking-tighter uppercase">Authority Portal</h1>
-          <p className="text-slate-500 mt-2 text-sm font-bold tracking-[0.3em]">RESTAURANT & RENTAL CONTROL</p>
-        </div>
-
-        <div className="bg-slate-900 border border-slate-800 p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
-          {/* Subtle Glow */}
-          <div className="absolute -top-24 -right-24 w-48 h-48 bg-maroon/20 blur-[100px] rounded-full"></div>
-          
-          <form onSubmit={handleAdminLogin} className="space-y-6 relative z-10">
-            {error && (
-              <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-4 rounded-2xl text-xs font-bold flex items-center gap-3">
-                <ShieldAlert className="w-4 h-4" /> {error}
+        <div className="bg-white p-6 sm:p-8 rounded-3xl sm:rounded-[2.5rem] shadow-2xl shadow-black/5 space-y-6">
+          {isForgotMode ? (
+            /* Forgot Password Form - Layout matched to reference image but with admin colors */
+            <form onSubmit={handleForgotPassword} className="space-y-6 pt-2">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center">
+                  <Mail className="w-8 h-8 text-maroon" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-display font-medium text-maroon leading-tight uppercase tracking-widest">Reset<br />Password</h2>
+                </div>
               </div>
-            )}
 
-            <div>
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">System Identifier</label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 w-5 h-5" />
+              {error && (
+                <div className="bg-red-50 text-red-500 p-3 rounded-xl text-[10px] font-bold border border-red-100 animate-shake">
+                  {error}
+                </div>
+              )}
+              {success && (
+                <div className="bg-green-50 text-green-600 p-3 rounded-xl text-[10px] font-bold border border-green-100">
+                  {success}
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Email</label>
                 <input
                   type="email"
-                  placeholder="admin@system.io"
-                  className="w-full bg-slate-950 border border-slate-800 text-white pl-12 pr-4 py-4 rounded-2xl outline-none focus:border-maroon focus:ring-4 focus:ring-maroon/10 transition-all font-bold text-sm"
+                  placeholder="Enter your email"
+                  className="w-full bg-white border border-gray-100 rounded-xl px-4 py-4 outline-none focus:border-maroon transition-all text-sm font-medium placeholder:text-gray-300"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
-            </div>
 
-            <div>
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 mb-2 block">Access Code</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 w-5 h-5" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
-                  className="w-full bg-slate-950 border border-slate-800 text-white pl-12 pr-12 py-4 rounded-2xl outline-none focus:border-maroon focus:ring-4 focus:ring-maroon/10 transition-all font-bold text-sm"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-maroon text-white py-4 rounded-xl font-bold text-sm tracking-widest transition-all shadow-xl shadow-maroon/20 active:scale-[0.98] disabled:opacity-50 mt-4"
+              >
+                {loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Send Reset Link'}
+              </button>
+
+              <div className="text-center pt-4">
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-maroon transition-colors"
+                  onClick={() => { setIsForgotMode(false); setError(''); setSuccess(''); }}
+                  className="text-[10px] font-bold text-luxury-gold uppercase tracking-[0.2em] hover:text-maroon transition-all"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  Back to Sign In
                 </button>
               </div>
-            </div>
+            </form>
+          ) : (
+            /* Login Form */
+            <>
+              <div className="text-center space-y-2">
+                <h1 className="text-2xl sm:text-3xl font-display font-medium text-maroon tracking-widest uppercase">
+                  Authority Portal
+                </h1>
+                <p className="font-display italic text-luxury-gold text-[12px] tracking-[0.3em] uppercase opacity-80">
+                  LUXURY RENTAL CONTROL
+                </p>
+              </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-maroon hover:bg-red-700 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all flex items-center justify-center gap-3 shadow-xl shadow-maroon/30 group disabled:opacity-50"
-            >
-              {loading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>Establish Connection <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></>
-              )}
-            </button>
-          </form>
+              <form onSubmit={handleAdminLogin} className="space-y-6" autoComplete="off">
+                <input type="text" name="prevent_autofill" id="prevent_autofill" value="" style={{ display: 'none' }} readOnly />
+                <input type="password" name="password_step_error" id="password_step_error" value="" style={{ display: 'none' }} readOnly />
+
+                {error && (
+                  <div className="bg-red-50 text-red-500 p-3 rounded-xl text-[10px] font-bold flex items-center gap-3 border border-red-100">
+                    <ShieldAlert className="w-4 h-4 flex-shrink-0" /> {error}
+                  </div>
+                )}
+
+                <div className="space-y-1 relative group">
+                  <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest ml-1 mb-1 block">Email</label>
+                  <Mail className="absolute left-0 bottom-3 text-luxury-gold w-4 h-4 transition-transform group-focus-within:-translate-y-1" />
+                  <input
+                    type="email"
+                    name="authority-identifier-v1"
+                    id="authority-identifier-v1"
+                    placeholder=""
+                    autoComplete="off"
+                    className="w-full bg-transparent border-b border-gray-100 pl-8 pr-4 py-2 outline-none focus:border-maroon transition-all text-sm font-medium placeholder:text-gray-300"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1 relative group">
+                  <label className="text-[9px] font-bold text-gray-400 uppercase tracking-widest ml-1 mb-1 block">Password</label>
+                  <Lock className="absolute left-0 bottom-3 text-luxury-gold w-4 h-4 transition-transform group-focus-within:-translate-y-1" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="secure-access-key-v1"
+                    id="secure-access-key-v1"
+                    placeholder=""
+                    autoComplete="new-password"
+                    className="w-full bg-transparent border-b border-gray-100 pl-8 pr-12 py-2 outline-none focus:border-maroon transition-all text-sm font-medium placeholder:text-gray-300"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-0 bottom-3 text-gray-400 hover:text-maroon transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+
+                <div className="flex justify-end -mt-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsForgotMode(true)}
+                    className="text-[9px] font-bold text-luxury-gold uppercase tracking-widest hover:text-maroon transition-colors"
+                  >
+                    Forgot your password?
+                  </button>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-maroon text-white py-4 rounded-2xl font-bold text-sm tracking-widest transition-all flex items-center justify-center gap-3 shadow-xl shadow-maroon/20 active:scale-[0.98] disabled:opacity-50 mt-4"
+                >
+                  {loading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <span className="font-sans font-bold uppercase tracking-[0.2em]">Sign In</span>
+                  )}
+                </button>
+              </form>
+            </>
+          )}
+
+          <div className="text-center pt-2 border-t border-gray-50">
+            <p className="text-[10px] font-medium text-gray-400 tracking-widest uppercase">
+              Secure Terminal v4.2.0 • Authorized Personnel Only
+            </p>
+          </div>
         </div>
-
-        <p className="text-center mt-8 text-slate-600 text-xs font-bold uppercase tracking-widest">
-          Secure Terminal v4.2.0 • Authorized Personnel Only
-        </p>
       </div>
     </div>
   );

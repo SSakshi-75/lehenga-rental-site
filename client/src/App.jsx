@@ -24,6 +24,7 @@ import AdminPortal from './pages/Admin/AdminPortal';
 import UserManagement from './pages/Admin/UserManagement';
 import AdminAuth from './pages/Admin/AdminAuth';
 import ContentManagement from './pages/Admin/ContentManagement';
+import Inquiries from './pages/Admin/Inquiries';
 import Footer from './components/Footer';
 import { Toaster } from 'react-hot-toast';
 import ScrollToTop from './components/ScrollToTop';
@@ -74,6 +75,7 @@ function App() {
               <Route path="edit-product/:id" element={<AddProduct />} />
               <Route path="orders" element={<AdminOrders />} />
               <Route path="content" element={<ContentManagement />} />
+              <Route path="inquiries" element={<Inquiries />} />
             </Route>
           </Route>
 

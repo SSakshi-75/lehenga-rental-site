@@ -76,4 +76,28 @@ const logoutUser = (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-export { registerUser, loginUser, logoutUser };
+// @desc    Forgot password request
+// @route   POST /api/auth/forgot-password
+// @access  Public
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "No account found with this email." });
+    }
+
+    // In a production app, we would generate a token and send an email here.
+    // For this implementation, we simulate the success.
+    res.json({ 
+      success: true, 
+      message: "Reset instructions have been sent to your registered email address." 
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export { registerUser, loginUser, logoutUser, forgotPassword };

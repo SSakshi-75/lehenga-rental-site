@@ -4,6 +4,11 @@ import Order from "../models/order.model.js";
 // @route   POST /api/orders
 // @access  Private
 const addOrderItems = async (req, res) => {
+  if (!req.user) {
+    res.status(401).json({ message: "Not authorized, please login" });
+    return;
+  }
+
   const {
     orderItems,
     shippingAddress,

@@ -55,24 +55,29 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (!selectedSize) {
       toast.error('Please select a size');
-      return;
+      return false;
     }
-    
-    const startDate = new Date().toISOString().split('T')[0];
-    const endDate = new Date(Date.now() + rentalDuration * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+    if (!startDate || !endDate) {
+      toast.error('Please select rental start and end dates');
+      return false;
+    }
+
+    if (new Date(startDate) >= new Date(endDate)) {
+      toast.error('End date must be after start date');
+      return false;
+    }
     
     addToCart(product, selectedSize, startDate, endDate, quantity);
     toast.success('Added to Bag');
+    return true;
   };
 
   const handleBuyNow = () => {
-    if (!selectedSize) {
-      toast.error('Please select a size');
-      return;
+    if (handleAddToCart()) {
+      navigate('/cart');
     }
-    handleAddToCart();
-    navigate('/cart');
-  }
+  };
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-white">
@@ -203,6 +208,7 @@ const ProductDetail = () => {
                 <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">Select Date <span className="text-red-500">•</span></label>
                 <input 
                   type="date" 
+                  min={new Date().toISOString().split('T')[0]}
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                   className="w-full p-3 border border-gray-200 rounded-sm text-sm focus:outline-none focus:border-black bg-white"
@@ -212,6 +218,7 @@ const ProductDetail = () => {
                 <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-500">Select End Date <span className="text-red-500">•</span></label>
                 <input 
                   type="date" 
+                  min={startDate || new Date().toISOString().split('T')[0]}
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                   className="w-full p-3 border border-gray-200 rounded-sm text-sm focus:outline-none focus:border-black bg-white"

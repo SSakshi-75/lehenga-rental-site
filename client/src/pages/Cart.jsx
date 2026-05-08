@@ -1,11 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { toast } from 'react-hot-toast';
 import { Trash2, Calendar, ShoppingBag, ArrowRight, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Cart = () => {
   const { cartItems, removeFromCart, cartSubtotal, cartTax, cartTotal } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    if (!user) {
+      toast.error('Please login to checkout');
+      navigate('/login');
+    } else {
+      navigate('/checkout');
+    }
+  };
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-10 md:py-16">
@@ -95,9 +108,12 @@ const Cart = () => {
                 <span className="text-3xl font-bold text-black">₹{cartTotal}</span>
               </div>
 
-              <Link to="/checkout" className="w-full bg-black text-white py-6 text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-gray-800 transition-all flex items-center justify-center gap-3">
+              <button 
+                onClick={handleCheckout}
+                className="w-full bg-black text-white py-6 text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-gray-800 transition-all flex items-center justify-center gap-3"
+              >
                 Check Out <ArrowRight className="w-4 h-4" />
-              </Link>
+              </button>
               
               <p className="text-[9px] text-gray-400 text-center mt-6 uppercase tracking-[0.2em] font-bold">
                 * All prices are inclusive of dry cleaning. GST added as per regulations.

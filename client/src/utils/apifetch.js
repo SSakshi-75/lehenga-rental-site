@@ -21,6 +21,7 @@ api.interceptors.request.use(
 export const login = (credentials) => api.post('/auth/login', credentials);
 export const register = (userData) => api.post('/auth/register', userData);
 export const logout = () => api.post('/auth/logout');
+export const forgotPassword = (email) => api.post('/auth/forgot-password', { email });
 
 // Product APIs
 export const getProducts = (params) => api.get('/products', { params });
@@ -50,5 +51,10 @@ export const getAdminStats = () => api.get('/admin/stats');
 
 // Upload API
 export const uploadFile = (formData, config) => api.post('/upload', formData, config);
+
+// Inquiry APIs
+export const getInquiries = () => api.get('/inquiries');
+export const createInquiry = (inquiryData) => api.post('/inquiries', inquiryData);
+export const updateInquiryStatus = (id, status) => api.put(`/inquiries/${id}/status`, { status });
 
 export default api;

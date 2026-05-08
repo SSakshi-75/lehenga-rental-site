@@ -1,29 +1,42 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Heart, X, Send, MessageCircle } from 'lucide-react';
+import { Heart, X, Send, MessageCircle, Loader2 } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { useWishlist } from '../context/WishlistContext';
+import { createInquiry } from '../utils/apifetch';
 
 const ProductCard = ({ product }) => {
   const [isEnquiryModalOpen, setIsEnquiryModalOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [enquiryData, setEnquiryData] = React.useState({ name: '', email: '', phone: '', address: '', city: '', message: '' });
   const { toggleWishlist, isInWishlist } = useWishlist();
   const isFav = isInWishlist(product._id);
 
-  const handleEnquirySubmit = (e) => {
+  const handleEnquirySubmit = async (e) => {
     e.preventDefault();
     
-    // Final Validation
     if (enquiryData.phone.length !== 10) {
       toast.error('Phone number must be exactly 10 digits.');
       return;
     }
 
-    toast.success('Enquiry sent successfully! We will contact you soon.');
-    setIsEnquiryModalOpen(false);
-    setEnquiryData({ name: '', email: '', phone: '', address: '', city: '', message: '' });
+    setLoading(true);
+    try {
+      await createInquiry({
+        product: product._id,
+        productName: product.name,
+        ...enquiryData
+      });
+      toast.success('Inquiry sent successfully! We will contact you soon.');
+      setIsEnquiryModalOpen(false);
+      setEnquiryData({ name: '', email: '', phone: '', address: '', city: '', message: '' });
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to send inquiry.');
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <motion.div 
@@ -203,10 +216,17 @@ const ProductCard = ({ product }) => {
                 </div>
                 <button 
                   type="submit"
-                  className="w-full bg-black text-white py-4 text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-gray-900 transition-all flex items-center justify-center gap-2 mt-4"
+                  disabled={loading}
+                  className="w-full bg-black text-white py-4 text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-gray-900 transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50"
                 >
-                  <Send className="w-3 h-3" />
-                  Send Inquiry
+                  {loading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Send className="w-3 h-3" />
+                      Send Inquiry
+                    </>
+                  )}
                 </button>
               </form>
             </motion.div>
